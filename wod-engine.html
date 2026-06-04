@@ -87,6 +87,11 @@ h1{font-family:'Archivo Black',sans-serif;font-size:26px;line-height:.95;letter-
 .watch b{color:var(--ink)}
 .spnote{background:rgba(255,138,60,.09);border:1px solid rgba(255,138,60,.3);color:#ffc79a;font-size:11.5px;padding:9px 11px;border-radius:9px;margin-bottom:12px;line-height:1.5}
 .scorebtn{width:100%;margin-top:12px;padding:13px;border-radius:11px;border:none;background:var(--panel2);color:var(--ink);border:1px solid var(--line);font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.blkscore{width:100%;margin-top:8px;padding:9px;border-radius:9px;border:1px solid var(--line);background:none;color:var(--mut);font-family:'Oswald';font-size:11px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.blkscore:active{transform:scale(.98)}
+.finwrap{margin-top:6px;padding-top:4px;border-top:1px dashed var(--line)}
+.finlabel{font-size:12px;color:var(--run);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:10px 0 8px}
+.finlabel span{color:var(--mut);font-weight:400;text-transform:none;letter-spacing:0}
 .lastscore{margin-top:10px;font-size:12px;color:var(--mut)}
 .lastscore b{color:var(--acc);font-family:'JetBrains Mono'}
 nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdrop-filter:blur(14px);border-top:2px solid var(--line);display:flex;padding:9px 6px calc(9px + env(safe-area-inset-bottom));z-index:40}
@@ -178,7 +183,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdro
     <div><div class="kick" id="blockKick">Block · Giugno 2026</div><h1>WOD Engine</h1></div>
     <div class="synced off" id="syncBadge" onclick="syncTap()"><span class="dot"></span><span id="syncTxt">Locale</span></div>
   </div>
-  <div class="sub">Mar · Mer · Ven — 4 settimane a format rotante</div>
+  <div class="sub">5 giorni · 4 settimane a format rotante</div>
 </header>
 
 <div class="blockbar">
@@ -192,17 +197,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdro
   <div class="list" id="list"></div>
 </div>
 
-<div id="runView" class="view">
-  <div class="pgwrap">
-    <div style="font-family:'Archivo Black';font-size:20px;text-transform:uppercase;color:var(--run);margin-bottom:4px">🏃 Corsa</div>
-    <div class="legend">Registra le uscite: km, durata, e il passo medio si calcola da solo. Avvia "Corsa all'aperto" sul Watch per calorie e battito.</div>
-    <div class="runstats" id="runstats"></div>
-    <button class="abtn" style="background:var(--run);margin-bottom:16px" onclick="openRunSheet()">+ Aggiungi corsa</button>
-    <div id="runlog"></div>
-    <div id="runchart"></div>
-  </div>
-</div>
-
 <div id="progView" class="view">
   <div class="pgwrap">
     <div class="scope"><button id="scopeBlock" class="on" onclick="setScope('block')">Questo blocco</button><button id="scopeAll" onclick="setScope('all')">Tutti i mesi</button></div>
@@ -213,7 +207,6 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdro
 
 <nav>
   <button class="nbtn active" id="navTrain" onclick="switchView('train')"><svg viewBox="0 0 24 24"><path d="M6 7v10M18 7v10M4 9h2v6H4zM18 9h2v6h-2zM6 12h12"/></svg>Allena</button>
-  <button class="nbtn" id="navRun" onclick="switchView('run')"><svg viewBox="0 0 24 24"><path d="M13 4a1 1 0 100 2 1 1 0 000-2zM7 21l3-6 3 2 1 4M10 15l-2-4 5-3 3 3 3 1"/></svg>Corsa</button>
   <button class="nbtn" id="navProg" onclick="switchView('prog')"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16l3-4 3 2 4-6"/></svg>Progressi</button>
 </nav>
 
@@ -228,7 +221,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdro
   <div class="ovtop"><div class="ovtitle" id="scoreTag">Punteggio</div><button class="x" onclick="closeSheet()">×</button></div>
   <h3 id="sheetTitle">—</h3><div class="ssub" id="sheetSub">—</div>
   <div id="scoreFields"></div>
-  <button class="tbig tstart" style="width:100%" onclick="saveScore()">Salva</button>
+  <button class="tbig tstart" style="width:100%;flex:0 0 auto" onclick="saveScore()">Salva</button>
   <div class="hist" id="hist"></div>
 </div>
 
@@ -327,8 +320,8 @@ const EXDB={
    stick(head(50,22)+L(50,29,50,66)+L(50,66,43,92)+L(50,66,57,92)+L(50,40,42,46)+L(50,40,58,46)+plate(42,44)+plate(58,44))
   ]},
  cleanpress:{name:"Clean & press",video:"clean and press barbell technique",
-  steps:["Bilanciere a terra/cosce, presa prona. Schiena piatta, anche basse.","CLEAN: tira il bilanciere esplosivo lungo il corpo e 'ruota' i gomiti sotto, prendendolo sulle spalle.","PRESS: dalle spalle, distendi le braccia sopra la testa. Riporta giù controllato e ripeti."],
-  cues:["Due fasi: prima sulle spalle (clean), poi sopra la testa (press)","La potenza del clean viene dall'anca","Tecnica prima della velocità"],
+  steps:["PARTENZA: bilanciere davanti alle cosce o a terra, piedi a larghezza anche, presa prona poco più larga delle spalle. Schiena piatta, petto alto, sguardo avanti.","TIRATA (clean): estendi con forza anche e ginocchia spingendo i piedi nel terreno; il bilanciere sale aderente al corpo. Quando arriva all'altezza del petto, ruota velocemente i gomiti SOTTO e in avanti per riceverlo sulle spalle (gomiti alti).","STACCO (press): da fermo sulle spalle, contrai i glutei e distendi le braccia sopra la testa fino a bloccare i gomiti, bilanciere sopra le orecchie.","RITORNO: riporta il bilanciere alle spalle, poi giù alle cosce controllato. Ripeti partendo di nuovo dalla tirata."],
+  cues:["È un movimento in 2 tempi: prima alle spalle (clean), poi sopra la testa (press) — non saltarli insieme","La potenza nasce dalla spinta di gambe e anca, non dalle braccia","Gomiti veloci sotto il bilanciere nella ricezione","A fine press: glutei contratti, niente schiena inarcata","Curane la tecnica prima di aumentare il ritmo"],
   knee:null,
   fig:[
    stick(head(42,34)+L(42,40,42,58)+L(42,58,38,84)+L(42,58,50,84)+L(42,46,52,56)+Lb(40,60,64,60)+plate(40,60)+plate(64,60)),
@@ -379,8 +372,8 @@ const EXDB={
   fig:[stick(L(12,98,40,98)+L(40,98,88,90,3)+head(16,91)),
    stick(L(50,100,34,72)+L(50,100,66,72)+head(40,80)+L(44,82,60,74))]},
  bulgarian:{name:"Bulgarian Split Squat",video:"bulgarian split squat form",
-  steps:["In piedi davanti a una panca/rialzo, dorso del piede posteriore appoggiato sopra. Manubri ai fianchi.","Scendi piegando la gamba davanti, ginocchio che segue la punta del piede, fino a coscia ~parallela.","Spingi col tallone anteriore per risalire. Tutto il lavoro è sulla gamba davanti."],
-  cues:["Peso sul tallone della gamba davanti","Ginocchio anteriore allineato col piede, mai all'interno","Busto leggermente avanti, schiena dritta"],
+  steps:["PARTENZA: in piedi a circa un passo davanti a una panca/rialzo. Appoggia il dorso del piede posteriore sopra il rialzo. Manubri ai fianchi, busto eretto.","DISCESA: piega la gamba davanti scendendo in verticale, finché la coscia anteriore è circa parallela al pavimento. Il ginocchio posteriore scende verso terra.","RISALITA: spingi con il TALLONE della gamba davanti per tornare su, senza rimbalzare.","Completa tutte le reps su una gamba, poi cambia."],
+  cues:["Quasi tutto il peso sulla gamba anteriore (quella che lavora)","Ginocchio anteriore allineato con la punta del piede, MAI cedere verso l'interno","Busto leggermente in avanti ma schiena dritta","Scendi e sali controllato, niente molleggi","Regola la distanza dalla panca così il ginocchio non supera troppo la punta"],
   knee:"Eccellente per stabilità monopodalica del ginocchio. Scendi e sali LENTO e controllato, mai cedimenti laterali. Se instabile, fallo senza peso all'inizio.",
   fig:[stick(`<rect x="68" y="78" width="20" height="22" fill="none" stroke="var(--line)" stroke-width="2"/>`+head(40,30)+L(40,36,40,64)+L(40,64,36,92)+L(40,64,70,80)+L(40,46,34,60)+L(40,46,46,60)+plate(34,62)+plate(46,62)),
    stick(`<rect x="68" y="78" width="20" height="22" fill="none" stroke="var(--line)" stroke-width="2"/>`+head(38,42)+L(38,48,38,70)+L(38,70,34,92)+L(38,70,72,80)+L(38,56,32,72)+L(38,56,44,72)+plate(32,74)+plate(44,74))]},
@@ -403,8 +396,8 @@ const EXDB={
   fig:[stick(head(50,26)+L(50,32,50,80)+L(50,80,44,100)+L(50,80,56,100)+L(50,42,42,62)+L(50,42,58,62)+plate(42,64)+plate(58,64)),
    stick(head(50,20)+L(50,26,50,74)+L(50,74,44,92)+L(50,74,56,92)+`<circle cx="44" cy="96" r="2.5" fill="var(--acc)"/><circle cx="56" cy="96" r="2.5" fill="var(--acc)"/>`+L(50,36,42,56)+L(50,36,58,56)+plate(42,58)+plate(58,58))]},
  nordic:{name:"Nordic Hamstring",video:"nordic hamstring curl beginner",
-  steps:["In ginocchio, caviglie bloccate sotto un appoggio fisso (o le tieni tu). Busto e cosce in linea.","Scendi LENTISSIMO in avanti resistendo con i femorali il più possibile.","Quando non reggi più, ammortizza con le mani a terra, poi spingi per tornare su (anche con le mani all'inizio)."],
-  cues:["La discesa lenta è tutto il lavoro","Corpo dritto dalle ginocchia alla testa","All'inizio aiutati con le mani per risalire"],
+  steps:["PARTENZA: in ginocchio su una superficie morbida (tappetino), caviglie bloccate sotto qualcosa di pesante o tenute da un appoggio. Corpo dritto e rigido dalle ginocchia alla testa, glutei contratti.","DISCESA: inclinati lentamente in avanti come un blocco unico, RESISTENDO con i femorali il più a lungo possibile. La discesa deve durare più secondi possibile: è qui tutto il lavoro.","ATTERRAGGIO: quando non riesci più a frenare, lasciati cadere e ammortizza con le mani a terra (come una push-up).","RITORNO: spingi con le mani per aiutarti a risalire alla posizione di partenza. Col tempo userai sempre meno le mani."],
+  cues:["La frenata lenta in discesa È l'esercizio: non lasciarti cadere subito","Corpo rigido e dritto: niente piegamento all'anca","Glutei e core sempre contratti","Inizia con poca escursione (scendi poco), aumenta man mano che diventi più forte","Sempre mani pronte davanti per atterrare in sicurezza"],
   knee:"È IL miglior esercizio per il tuo crociato: rinforza i femorali che proteggono il ginocchio. Inizia con poca escursione e aumenta col tempo. Fondamentale farlo bene.",
   fig:[stick(`<line x1="20" y1="100" x2="40" y2="100" stroke="var(--line)" stroke-width="3"/>`+head(64,40)+L(60,44,40,96)+L(64,46,64,70)),
    stick(`<line x1="20" y1="100" x2="40" y2="100" stroke="var(--line)" stroke-width="3"/>`+head(80,56)+L(74,58,40,96)+L(80,60,80,78))]},
@@ -469,85 +462,62 @@ function exFind(name){
    Ogni giorno ha 'blocks': [{type, cap, rounds, label, mv:[[nome,reps,carico]]}]
    carico: {db:17}|{bar:28}|{dip:8}|null  (db=manubri/mano, bar=bilanciere, dip=carico ai dip)
    ============================================================ */
-const DAYS=['MAR','MER','VEN'];
-const DAYNAME={MAR:'Martedì · Upper',MER:'Mercoledì · Athletic Legs',VEN:'Venerdì · Pull Power'};
+const DAYS=['UPPER','LEGS','PULL','RUN','WILD'];
+const DAYINFO={
+  UPPER:{name:"Upper Forge",focus:"Spinte · curl · trazioni · core",icon:"💪",watch:"Functional Strength Training",finisher:true},
+  LEGS:{name:"Athletic Legs",focus:"Gambe esplosive · ginocchio · core",icon:"🦵",watch:"Functional Strength Training",finisher:true},
+  PULL:{name:"Pull Power",focus:"Tirate pesanti · potenza",icon:"🔥",watch:"Functional Strength Training",finisher:true},
+  RUN:{name:"Endurance Run",focus:"Corsa · resistenza",icon:"🏃",watch:"Corsa all'aperto",run:true},
+  WILD:{name:"Wild Card",focus:"Full-body jolly · se salta una seduta",icon:"★",watch:"High Intensity Interval Training",finisher:true,special:true}
+};
 
-function PLAN(){return {
- 1:{ // SETTIMANA 1 — EMOM
-  label:"EMOM",
-  MAR:{title:"Upper",blocks:[
-    {type:"emom",cap:24,rounds:6,stations:4,label:"EMOM 24' · 6 giri",
-     mv:[["Pull-up","6",{dip:8}],["Spinte petto manubri","10",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","15",null]]}
-  ]},
-  MER:{title:"Athletic Legs",blocks:[
-    {type:"emom",cap:8,rounds:4,stations:2,label:"EMOM 8' · 4 giri",
-     mv:[["Squat Jump","10",null],["Dip","8",{dip:8}]]},
-    {type:"amrap",cap:8,label:"AMRAP 8'",
-     mv:[["Bulgarian Split Squat /gamba","8",{db:17}],["Dip","8",{dip:8}],["Mountain Climbers /gamba","20",null]]},
-    {type:"amrap",cap:8,label:"AMRAP 8'",
-     mv:[["Affondi indietro /gamba","10",{db:17}],["Calf Raise","20",{db:17}],["Nordic Hamstring","5",null]]}
-  ]},
-  VEN:{title:"Pull Power",blocks:[
-    {type:"emom",cap:24,rounds:6,stations:4,label:"EMOM 24' · 6 giri",
-     mv:[["Pull-up","6",{dip:8}],["Clean & Press","8",{bar:28}],["Rematore","12",{bar:28}],["Chin-up","8",null]]}
-  ]}
+function PLAN(){
+ const WILD={blocks:[{type:"amrap",cap:20,label:"AMRAP 20'",
+   mv:[["Pull-up","5",{dip:8}],["Dip","10",{dip:8}],["Curl alternato manubri","10",{db:17}],["Chin-up","10",null],["Hollow Rocks","20",null]]}]};
+ const RUN={run:true};
+ return {
+ 1:{ label:"EMOM",
+  UPPER:{blocks:[{type:"emom",cap:24,rounds:6,stations:4,label:"EMOM 24' · 6 giri",
+     mv:[["Pull-up","6",{dip:8}],["Spinte petto manubri","10",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","15",null]]}]},
+  LEGS:{blocks:[
+    {type:"emom",cap:8,rounds:4,stations:2,label:"EMOM 8' · 4 giri",mv:[["Squat Jump","10",null],["Dip","8",{dip:8}]]},
+    {type:"amrap",cap:8,label:"AMRAP 8'",mv:[["Bulgarian Split Squat /gamba","8",{db:17}],["Dip","8",{dip:8}],["Mountain Climbers /gamba","20",null]]},
+    {type:"amrap",cap:8,label:"AMRAP 8'",mv:[["Affondi indietro /gamba","10",{db:17}],["Calf Raise","20",{db:17}],["Nordic Hamstring","5",null]]}]},
+  PULL:{blocks:[{type:"emom",cap:24,rounds:6,stations:4,label:"EMOM 24' · 6 giri",
+     mv:[["Pull-up","6",{dip:8}],["Clean & Press","8",{bar:28}],["Rematore","12",{bar:28}],["Chin-up","8",null]]}]},
+  RUN,WILD
  },
- 2:{ // SETTIMANA 2 — AMRAP
-  label:"AMRAP",
-  MAR:{title:"Upper",blocks:[
-    {type:"amrap",cap:25,label:"AMRAP 25'",
-     mv:[["Pull-up","8",null],["Spinte petto manubri","12",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","20",null]]}
-  ]},
-  MER:{title:"Athletic Legs",blocks:[
-    {type:"amrap",cap:25,label:"AMRAP 25'",
-     mv:[["Dip","8",{dip:8}],["Affondi indietro /gamba","10",{db:17}],["Calf Raise","15",{db:17}],["Nordic Hamstring","5",null],["Mountain Climbers /gamba","20",null]]}
-  ]},
-  VEN:{title:"Pull Power",blocks:[
-    {type:"amrap",cap:25,label:"AMRAP 25'",
-     mv:[["Pull-up","4",null],["Chin-up","4",null],["Clean & Press","10",{bar:28}],["Rematore","12",{bar:28}],["Russian Twist","20",null]]}
-  ]}
+ 2:{ label:"AMRAP",
+  UPPER:{blocks:[{type:"amrap",cap:25,label:"AMRAP 25'",
+     mv:[["Pull-up","8",null],["Spinte petto manubri","12",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","20",null]]}]},
+  LEGS:{blocks:[{type:"amrap",cap:25,label:"AMRAP 25'",
+     mv:[["Dip","8",{dip:8}],["Affondi indietro /gamba","10",{db:17}],["Calf Raise","15",{db:17}],["Nordic Hamstring","5",null],["Mountain Climbers /gamba","20",null]]}]},
+  PULL:{blocks:[{type:"amrap",cap:25,label:"AMRAP 25'",
+     mv:[["Pull-up","4",null],["Chin-up","4",null],["Clean & Press","10",{bar:28}],["Rematore","12",{bar:28}],["Russian Twist","20",null]]}]},
+  RUN,WILD
  },
- 3:{ // SETTIMANA 3 — FOR TIME
-  label:"FOR TIME",
-  MAR:{title:"Upper",blocks:[
-    {type:"fortime",cap:25,label:"For Time (minor tempo possibile)",
-     mv:[["Pull-up","50",null],["Spinte petto manubri","80",{db:17}],["Curl alternato manubri","50",{db:17}],["V-Ups","80",null]]}
-  ]},
-  MER:{title:"Athletic Legs",blocks:[
-    {type:"fortime",cap:25,label:"For Time",
-     mv:[["Dip","50",{dip:8}],["Affondi indietro (tot)","100",{db:17}],["Calf Raise","100",{db:17}],["Nordic Hamstring","25",null],["Mountain Climbers /gamba","100",null]]}
-  ]},
-  VEN:{title:"Pull Power",blocks:[
-    {type:"fortime",cap:25,label:"For Time",
-     mv:[["Pull-up","50",null],["Clean & Press","50",{bar:28}],["Rematore","100",{bar:28}],["Chin-up","50",null],["Russian Twist","80",null]]}
-  ]}
+ 3:{ label:"FOR TIME",
+  UPPER:{blocks:[{type:"fortime",cap:25,label:"For Time",
+     mv:[["Pull-up","50",null],["Spinte petto manubri","80",{db:17}],["Curl alternato manubri","50",{db:17}],["V-Ups","80",null]]}]},
+  LEGS:{blocks:[{type:"fortime",cap:25,label:"For Time",
+     mv:[["Dip","50",{dip:8}],["Affondi indietro (tot)","100",{db:17}],["Calf Raise","100",{db:17}],["Nordic Hamstring","25",null],["Mountain Climbers /gamba","100",null]]}]},
+  PULL:{blocks:[{type:"fortime",cap:25,label:"For Time",
+     mv:[["Pull-up","50",null],["Clean & Press","50",{bar:28}],["Rematore","100",{bar:28}],["Chin-up","50",null],["Russian Twist","80",null]]}]},
+  RUN,WILD
  },
- 4:{ // SETTIMANA 4 — BENCHMARK (5 giri For Time)
-  label:"BENCHMARK",benchmark:1,
-  MAR:{title:"Upper",blocks:[
-    {type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
-     mv:[["Pull-up","10",null],["Spinte petto manubri","15",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","20",null]]}
-  ]},
-  MER:{title:"Athletic Legs",blocks:[
-    {type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
-     mv:[["Dip","10",{dip:8}],["Bulgarian Split Squat /gamba","15",{db:17}],["Calf Raise","20",{db:17}],["Nordic Hamstring","5",null],["Mountain Climbers /gamba","20",null]]}
-  ]},
-  VEN:{title:"Pull Power",blocks:[
-    {type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
-     mv:[["Pull-up","8",{dip:8}],["Clean & Press","10",{bar:28}],["Rematore","15",{bar:28}],["Chin-up","8",null],["Russian Twist","20",null]]}
-  ]}
+ 4:{ label:"BENCHMARK",benchmark:1,
+  UPPER:{blocks:[{type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
+     mv:[["Pull-up","10",null],["Spinte petto manubri","15",{db:17}],["Curl alternato manubri","8",{db:17}],["V-Ups","20",null]]}]},
+  LEGS:{blocks:[{type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
+     mv:[["Dip","10",{dip:8}],["Bulgarian Split Squat /gamba","15",{db:17}],["Calf Raise","20",{db:17}],["Nordic Hamstring","5",null],["Mountain Climbers /gamba","20",null]]}]},
+  PULL:{blocks:[{type:"fortime",cap:25,rounds:5,label:"5 giri For Time",
+     mv:[["Pull-up","8",{dip:8}],["Clean & Press","10",{bar:28}],["Rematore","15",{bar:28}],["Chin-up","8",null],["Russian Twist","20",null]]}]},
+  RUN,WILD
  }
-};}
-
-/* Jolly e finisher, indipendenti dalla settimana */
-const JOLLY={title:"Jolly",sub:"Sostitutivo full-body",blocks:[
-  {type:"amrap",cap:20,label:"AMRAP 20'",
-   mv:[["Pull-up","5",{dip:8}],["Dip","10",{dip:8}],["Curl alternato manubri","10",{db:17}],["Chin-up","10",null],["Hollow Rocks","20",null]]}
-]};
-const FINISHER={title:"Finisher Core",sub:"Opzionale · ~3 min · per calcio e corsa",blocks:[
-  {type:"rounds",rounds:2,label:"2 giri",
-   mv:[["Hollow Hold","30 sec",null],["Side Plank destro","30 sec",null],["Side Plank sinistro","30 sec",null],["Plank","30 sec",null]]}
-]};
+ };
+}
+const FINISHER={blocks:[{type:"rounds",rounds:2,label:"Finisher Core · 2 giri",
+  mv:[["Hollow Hold","30 sec",null],["Side Plank destro","30 sec",null],["Side Plank sinistro","30 sec",null],["Plank","30 sec",null]]}]};
 
 /* ===== CONFIG SUPABASE (incolla i tuoi valori, vedi guida) ===== */
 const SB_URL = "https://lvewcfxcapsnxmhiafbx.supabase.co";
@@ -602,16 +572,16 @@ async function loadBlockData(){
   scores={};loads={};runs=[];
   if(cloud&&user){
     const {data:sc}=await sb.from('wod_scores').select('*').eq('user_id',user.id).eq('block',curBlock).order('created_at');
-    (sc||[]).forEach(r=>{const k=`${r.week}_${r.day}`;(scores[k]=scores[k]||[]).push({date:fmtD(r.created_at),val:r.value,note:r.note||'',num:r.num_value});});
+    (sc||[]).forEach(r=>{const k=`${r.week}_${r.day}`;(scores[k]=scores[k]||[]).push({date:fmtD(r.created_at),val:r.value,note:r.note||'',num:r.num_value,reps:r.reps,kcal:r.kcal});});
     const {data:ld}=await sb.from('loads').select('*').eq('user_id',user.id);(ld||[]).forEach(r=>loads[r.load_key]=r.value);
     const {data:rn}=await sb.from('runs').select('*').eq('user_id',user.id).eq('block',curBlock).order('ran_at');
     runs=(rn||[]).map(r=>({id:r.id,date:fmtD(r.ran_at),km:r.km,min:r.minutes,hr:r.hr_avg,note:r.note||''}));
   }else{scores=lsGet(`scores_${curBlock}`,{});loads=lsGet('loads',{});runs=lsGet(`runs_${curBlock}`,[]);}
 }
 function fmtD(iso){const d=new Date(iso);return `${d.getDate()}/${d.getMonth()+1}`;}
-async function saveScoreData(week,day,name,fmt,val,num,note){
-  const k=`${week}_${day}`;(scores[k]=scores[k]||[]).push({date:fmtD(new Date().toISOString()),val,note,num});
-  if(cloud&&user)await sb.from('wod_scores').insert({user_id:user.id,block:curBlock,week,day,wod_name:name,fmt,value:val,num_value:num,note});
+async function saveScoreData(week,day,name,fmt,val,num,note,kcal,reps){
+  const k=`${week}_${day}`;(scores[k]=scores[k]||[]).push({date:fmtD(new Date().toISOString()),val,note,num,kcal:kcal||null,reps:reps||null});
+  if(cloud&&user)await sb.from('wod_scores').insert({user_id:user.id,block:curBlock,week,day,wod_name:name,fmt,value:val,num_value:num,note,kcal:kcal||null,reps:reps||null});
   else lsSet(`scores_${curBlock}`,scores);
 }
 async function saveLoadData(key,val){loads[key]=val;
@@ -643,11 +613,9 @@ function renderAll(){renderBlockSel();renderWeeks();renderList();setSyncBadge();
 function renderWeeks(){
   let html='';
   for(let w=1;w<=4;w++){const p=plan[w];html+=`<div class="wtab ${w===curWeek?'active':''} ${p.benchmark?'bench':''}" onclick="selWeek(${w})"><div class="wn">S${w}</div><div class="wl">${p.label}</div></div>`;}
-  // jolly tab
-  html+=`<div class="wtab ${curWeek===99?'active':''}" onclick="selWeek(99)"><div class="wn">★</div><div class="wl">Jolly</div></div>`;
   document.getElementById('weeks').innerHTML=html;
-  const hints={1:'Settimana EMOM: un esercizio per minuto, il tempo che avanza è recupero. Densità e tecnica.',2:'Settimana AMRAP: più giri possibili nel tempo dato. Ritmo costante.',3:'Settimana For Time: completa il volume nel minor tempo. Spezza le reps con criterio.',4:'Settimana Benchmark: 5 giri a tempo. È il test che confronti coi mesi successivi.',99:'Allenamento Jolly: sostitutivo full-body quando salta una seduta. In fondo trovi il Finisher Core opzionale.'};
-  document.getElementById('weekHint').innerHTML='<b>'+(curWeek===99?'JOLLY':'SETTIMANA '+curWeek)+'.</b> '+hints[curWeek];
+  const hints={1:'Settimana EMOM: un esercizio per minuto, il tempo che avanza è recupero. Densità e tecnica.',2:'Settimana AMRAP: più giri possibili nel tempo dato. Ritmo costante.',3:'Settimana For Time: completa il volume nel minor tempo. Spezza le reps con criterio.',4:'Settimana Benchmark: 5 giri a tempo. È il test che confronti coi mesi successivi.'};
+  document.getElementById('weekHint').innerHTML='<b>SETTIMANA '+curWeek+' · '+plan[curWeek].label+'.</b> '+hints[curWeek];
 }
 function selWeek(w){curWeek=w;renderList();}
 
@@ -660,52 +628,76 @@ function loadLabel(week,day,bi,mi,carico){
 }
 async function editL(week,day,bi,mi,kind,def,lbl){const cur=getLoad(week,day,bi,mi,kind,def);const v=prompt(lbl+' (kg):',cur);if(v===null)return;const n=parseFloat(v);if(isNaN(n)||n<0)return;await saveLoadData(loadKey(week,day,bi,mi,kind),n);renderList();toast('Carico aggiornato');}
 
+/* Registry dei timer: evita parametri complessi nell'onclick (causa del bug) */
+let TIMER_REG={};
 function blockHtml(week,day,blk,bi){
   const tlabel=blk.type==='rounds'?'rounds':blk.type;
-  const timerBtn=blk.type!=='rounds'?`<button class="blktimer" onclick="openTimer('${blk.type}',${blk.cap||0},${blk.rounds||0},${blk.stations||0},'${esc(blk.label)}')">⏱ Timer</button>`:'';
+  const tid=`${week}_${day}_${bi}`;
+  TIMER_REG[tid]={type:blk.type,cap:blk.cap||0,rounds:blk.rounds||0,stations:blk.stations||0,label:blk.label};
+  const timerBtn=blk.type!=='rounds'?`<button class="blktimer" onclick="openTimer('${tid}')">⏱ Timer</button>`:'';
   const mvs=blk.mv.map((m,mi)=>{
     const ex=exFind(m[0]);const exId=`ex_${week}_${day}_${bi}_${mi}`;
     const exBtn=ex?`<button class="exbtn" onclick="toggleEx('${exId}')">ℹ︎ Come si fa</button>`:'';
     const exPanel=ex?`<div class="expanel" id="${exId}">${exPanelHtml(ex)}</div>`:'';
     return `<div class="mv"><div class="mvname">${m[0]}${exBtn?'<br>'+exBtn:''}</div><div class="mvr"><span class="reps">${m[1]}</span>${loadLabel(week,day,bi,mi,m[2])}</div></div>${exPanel}`;
   }).join('');
-  return `<div class="blk"><div class="blkhead"><span class="blktype ${tlabel}">${esc(blk.label)}</span>${timerBtn}</div><div class="blkmv">${mvs}</div></div>`;
+  // pulsante punteggio del singolo blocco
+  const blkScore=blk.type!=='rounds'?`<button class="blkscore" onclick="openScore(${week},'${day}',${bi})">✓ Punteggio blocco</button>`:'';
+  const bk=blockScoreLabel(week,day,bi);
+  return `<div class="blk"><div class="blkhead"><span class="blktype ${tlabel}">${esc(blk.label)}</span>${timerBtn}</div><div class="blkmv">${mvs}${blkScore}${bk}</div></div>`;
+}
+function blockScoreLabel(week,day,bi){
+  const h=scores[`${week}_${day}_${bi}`]||[];if(!h.length)return '';
+  const last=h[h.length-1];return `<div class="lastscore">Ultimo: <b>${esc(last.val)}</b> · ${last.date}</div>`;
 }
 
 function renderList(){
-  const host=document.getElementById('list');
-  if(curWeek===99){host.innerHTML=specialCard('JOLLY',JOLLY,'sp')+specialCard('CORE',FINISHER,'sp');return;}
+  const host=document.getElementById('list');TIMER_REG={};
   const p=plan[curWeek];let html='';
   DAYS.forEach(day=>{
-    const d=p[day];if(!d)return;
-    const blocks=d.blocks.map((b,bi)=>blockHtml(curWeek,day,b,bi)).join('');
-    const key=`${curWeek}_${day}`;const hist=scores[key]||[];const last=hist[hist.length-1];
-    let ref='';
-    if(p.benchmark){ // confronta con benchmark precedenti mesi? per ora ultimo
-      if(last)ref=`<div class="lastscore">Ultimo benchmark: <b>${esc(last.val)}</b> · ${last.date}</div>`;
-    } else if(last)ref=`<div class="lastscore">Ultimo: <b>${esc(last.val)}</b> · ${last.date}</div>`;
-    const watch=day==='MER'?'Functional Strength Training (o HIIT)':'Functional Strength Training';
-    html+=`<div class="card" id="card_${day}">
+    const info=DAYINFO[day];const d=p[day];if(!d)return;
+    if(info.run){ html+=runCard(); return; }
+    const blks=d.blocks.map((b,bi)=>blockHtml(curWeek,day,b,bi)).join('');
+    // finisher core in fondo (tranne corsa)
+    let fin='';
+    if(info.finisher){const fb=FINISHER.blocks.map((b,bi)=>blockHtml(curWeek,day+'_FIN',b,bi)).join('');fin=`<div class="finwrap"><div class="finlabel">🔥 Finisher Core <span>· opzionale, ~3 min</span></div>${fb}</div>`;}
+    // totale giornaliero
+    const tot=dayTotalLabel(curWeek,day,d);
+    const sp=info.special?'<div class="spnote">⚡ Wild Card: usalo quando salta una seduta, non in aggiunta alle altre.</div>':'';
+    html+=`<div class="card ${info.special?'special':''}" id="card_${day}">
       <div class="chead" onclick="toggleCardD('${day}')">
-        <div class="daytag">${day}</div>
-        <div class="ctitle"><div class="cname">${DAYNAME[day].split('·')[1].trim()}</div><div class="cmeta">${DAYNAME[day].split('·')[0].trim()} · ${p.label}</div></div>
+        <div class="daytag">${info.icon}</div>
+        <div class="ctitle"><div class="cname">${info.name}</div><div class="cmeta">${info.focus} · ${p.label}</div></div>
         <div class="chev">▶</div></div>
       <div class="cbody"><div class="cinner">
-        ${blocks}
-        <div class="watch">⌚ Apple Watch: avvia <b>${watch}</b></div>${ref}
-        <button class="scorebtn" onclick="openScore(${curWeek},'${day}','${esc(DAYNAME[day])}','${p[day].blocks[0].type}')">✓ Registra punteggio</button>
+        ${sp}${blks}${fin}
+        <div class="watch">⌚ Apple Watch: avvia <b>${info.watch}</b></div>
+        ${tot}
+        <button class="scorebtn" onclick="openDayTotal(${curWeek},'${day}')">📊 Totale giornata + kcal</button>
       </div></div></div>`;
   });
   host.innerHTML=html;
 }
-function specialCard(tag,obj,cls){
-  const blocks=obj.blocks.map((b,bi)=>blockHtml(99,tag,b,bi)).join('');
-  const note=tag==='JOLLY'?'<div class="spnote">⚡ Usalo quando salta una seduta. Non in aggiunta alle 3 fisse.</div>':'<div class="spnote">Opzionale, ~3 minuti a fine allenamento. Ottimo per core, calcio e corsa.</div>';
-  const scoreBtn=tag==='JOLLY'?`<button class="scorebtn" onclick="openScore(99,'JOLLY','Jolly · AMRAP 20','amrap')">✓ Registra punteggio</button>`:'';
-  return `<div class="card special" id="card_${tag}"><div class="chead" onclick="toggleCardD('${tag}')">
-    <div class="daytag sp">${tag==='JOLLY'?'★':'🔥'}</div>
-    <div class="ctitle"><div class="cname">${obj.title}</div><div class="cmeta">${obj.sub}</div></div><div class="chev">▶</div></div>
-    <div class="cbody"><div class="cinner">${note}${blocks}${scoreBtn}</div></div></div>`;
+function dayTotalLabel(week,day,d){
+  const h=scores[`${week}_${day}_TOTAL`]||[];if(!h.length)return '';
+  const last=h[h.length-1];return `<div class="lastscore">Totale giornata: <b>${esc(last.val)}</b>${last.note?' · '+esc(last.note):''} · ${last.date}</div>`;
+}
+function runCard(){
+  const tot=runs.reduce((s,r)=>s+r.km,0),totMin=runs.reduce((s,r)=>s+r.min,0);
+  const avg=tot>0?paceStr(tot,totMin):'—';
+  const info=DAYINFO.RUN;
+  const log=runs.length?runs.slice().reverse().slice(0,5).map(r=>`<div class="mv"><div class="mvname">${r.date}${r.note?' · '+esc(r.note):''}</div><div class="mvr"><span class="reps">${r.km.toFixed(1)} km</span><span class="ld">${paceStr(r.km,r.min)}/km · ${r.min}′</span></div></div>`).join(''):'<div class="note">Nessuna corsa registrata in questo blocco.</div>';
+  return `<div class="card" id="card_RUN">
+    <div class="chead" onclick="toggleCardD('RUN')">
+      <div class="daytag">${info.icon}</div>
+      <div class="ctitle"><div class="cname">${info.name}</div><div class="cmeta">${info.focus}</div></div>
+      <div class="chev">▶</div></div>
+    <div class="cbody"><div class="cinner">
+      <div class="runstats"><div class="rstat"><div class="rv">${tot.toFixed(1)}</div><div class="rl">km blocco</div></div><div class="rstat"><div class="rv">${runs.length}</div><div class="rl">uscite</div></div><div class="rstat"><div class="rv">${avg}</div><div class="rl">passo medio</div></div></div>
+      ${log}
+      <div class="watch">⌚ Apple Watch: avvia <b>${info.watch}</b></div>
+      <button class="scorebtn" onclick="openRunSheet()">+ Aggiungi corsa</button>
+    </div></div></div>`;
 }
 function toggleCardD(day){document.getElementById('card_'+day).classList.toggle('open');}
 const esc=s=>String(s).replace(/[<>&'"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&#39;','"':'&quot;'}[c]));
@@ -722,21 +714,24 @@ function exPanelHtml(ex){
   return `<div class="exfigs">${figs}</div><ol class="exsteps">${steps}</ol><div class="excues"><b>Cue chiave:</b><br>${cues}</div>${knee}<a class="exvideo" href="${v}" target="_blank" rel="noopener">🎥 Vedi video dimostrativi</a>`;
 }
 
-/* ===== TIMER ===== */
-let tState={mode:'amrap',running:false,sec:0,interval:null,cap:0,rounds:0,stations:0};
-function openTimer(mode,cap,rounds,stations,name){
-  tState={mode:mode==='fortime'?'fortime':mode,running:false,sec:0,interval:null,cap,rounds,stations};
-  document.getElementById('timerName').textContent=name;
+/* ===== TIMER (legge dal registry: niente parametri complessi nell'onclick) ===== */
+let tState={mode:'amrap',running:false,sec:0,interval:null};
+function openTimer(tid){
+  const t=TIMER_REG[tid];if(!t){toast('Timer non disponibile');return;}
+  const mode=t.type==='fortime'?'fortime':t.type;
+  tState={mode,running:false,sec:0,interval:null};
+  document.getElementById('timerName').textContent=t.label||'Timer';
   const cfg=document.getElementById('cfgrow'),rb=document.getElementById('roundbox');
-  if(mode==='emom'){cfg.innerHTML=`<label>Tot min</label><input type="number" id="capMin" value="${cap}"><label>Stazioni</label><input type="number" id="emomRot" value="${stations||4}">`;rb.style.display='block';rb.textContent='ST 1';document.getElementById('subtime').textContent='Cambio stazione ogni minuto';}
-  else if(mode==='amrap'){cfg.innerHTML=`<label>Cap minuti</label><input type="number" id="capMin" value="${cap}">`;rb.style.display='none';document.getElementById('subtime').textContent='Conta i giri a mano';}
-  else{cfg.innerHTML=`<label>Cap minuti (0=libero)</label><input type="number" id="capMin" value="${cap||0}">`;rb.style.display='none';document.getElementById('subtime').textContent='Cronometro in salita';}
+  if(mode==='emom'){cfg.innerHTML=`<label>Tot min</label><input type="number" id="capMin" value="${t.cap}"><label>Stazioni</label><input type="number" id="emomRot" value="${t.stations||4}">`;rb.style.display='block';rb.textContent='ST 1';document.getElementById('subtime').textContent='Cambio stazione ogni minuto';}
+  else if(mode==='amrap'){cfg.innerHTML=`<label>Cap minuti</label><input type="number" id="capMin" value="${t.cap}">`;rb.style.display='none';document.getElementById('subtime').textContent='Conta i giri a mano';}
+  else{cfg.innerHTML=`<label>Cap minuti (0=libero)</label><input type="number" id="capMin" value="${t.cap||0}">`;rb.style.display='none';document.getElementById('subtime').textContent='Cronometro in salita';}
   resetTimer();document.getElementById('overlay').classList.add('show');
 }
 function fmtT(s){const m=Math.floor(s/60),ss=s%60;return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
 function updateDisplay(){document.getElementById('bigtime').textContent=fmtT(Math.abs(tState.sec));if(tState.mode==='emom'){const rot=parseInt(document.getElementById('emomRot')?.value||4);document.getElementById('roundbox').textContent='ST '+((Math.floor(tState.sec/60)%rot)+1);}}
 function toggleTimer(){const btn=document.getElementById('startBtn');
   if(tState.running){clearInterval(tState.interval);tState.running=false;btn.textContent='Riprendi';btn.classList.remove('running');return;}
+  if(actx&&actx.state==='suspended'){actx.resume();}
   tState.running=true;btn.textContent='Pausa';btn.classList.add('running');
   const cap=(parseInt(document.getElementById('capMin')?.value||0))*60;
   tState.interval=setInterval(()=>{
@@ -750,37 +745,62 @@ function resetTimer(){clearInterval(tState.interval);tState.running=false;tState
 function closeTimer(){clearInterval(tState.interval);tState.running=false;document.getElementById('overlay').classList.remove('show');}
 let actx=null;function beep(){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=880;o.type='square';g.gain.setValueAtTime(.18,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.25);o.start();o.stop(actx.currentTime+.25);}catch(e){}}
 
-/* ===== PUNTEGGIO ===== */
+/* ===== PUNTEGGIO per BLOCCO + TOTALE GIORNATA ===== */
 let scoreCtx={};
-function openScore(week,day,title,fmt){scoreCtx={week,day,fmt};
-  document.getElementById('scoreTag').textContent=(day.length<=4?day:day)+' · '+(week===99?'Jolly':'S'+week);
-  document.getElementById('sheetTitle').textContent=title.split('·')[0].trim();
-  document.getElementById('sheetSub').textContent=title;
-  const lbl=fmt==='amrap'?'Giri completati (+ reps extra)':fmt==='emom'?'Note / reps tenute':'Tempo totale (mm:ss)';
-  const ph=fmt==='amrap'?'es. 6 giri + 12':fmt==='emom'?'es. tutte le reps tenute':'es. 14:32';
-  document.getElementById('scoreFields').innerHTML=`<div class="fld"><label>${lbl}</label><input type="text" id="scoreInput" placeholder="${ph}"></div><div class="fld"><label>Note</label><input type="text" id="noteInput" placeholder="opzionale"></div>`;
-  renderHist(week,day);document.getElementById('sheet').classList.add('show');scoreCtx.run=false;
+function blockFmt(week,day,bi){const d=plan[week][day];return d&&d.blocks&&d.blocks[bi]?d.blocks[bi].type:'amrap';}
+function openScore(week,day,bi){
+  const d=plan[week][day];const blk=d.blocks[bi];const fmt=blk.type;
+  scoreCtx={week,day,bi,fmt,run:false,total:false};
+  document.getElementById('scoreTag').textContent=DAYINFO[day]?DAYINFO[day].name:day;
+  document.getElementById('sheetTitle').textContent=blk.label;
+  document.getElementById('sheetSub').textContent='Punteggio di questo blocco';
+  const lbl=fmt==='amrap'?'Giri completati (+ reps extra)':fmt==='emom'?'Reps tenute / note':'Tempo (mm:ss)';
+  const ph=fmt==='amrap'?'es. 6 giri + 12':fmt==='emom'?'es. tutte tenute':'es. 14:32';
+  document.getElementById('scoreFields').innerHTML=`<div class="fld"><label>${lbl}</label><input type="text" id="scoreInput" placeholder="${ph}"></div><div class="fld"><label>Reps totali (per il totale giornata)</label><input type="number" inputmode="numeric" id="repsInput" placeholder="es. 120"></div><div class="fld"><label>Note</label><input type="text" id="noteInput" placeholder="opzionale"></div>`;
+  renderHist(`${week}_${day}_${bi}`);document.getElementById('sheet').classList.add('show');
+}
+function openDayTotal(week,day){
+  scoreCtx={week,day,total:true,run:false};
+  const d=plan[week][day];
+  // somma automatica delle reps salvate per blocco
+  let sum=0,parts=[];
+  d.blocks.forEach((b,bi)=>{const h=scores[`${week}_${day}_${bi}`];if(h&&h.length){const last=h[h.length-1];if(last.reps){sum+=last.reps;parts.push(last.reps);}}});
+  document.getElementById('scoreTag').textContent=DAYINFO[day].name;
+  document.getElementById('sheetTitle').textContent='Totale giornata';
+  document.getElementById('sheetSub').textContent=parts.length?`Somma reps dei blocchi: ${parts.join(' + ')} = ${sum}`:'Somma automatica dai blocchi (registra prima i blocchi) oppure inserisci a mano.';
+  document.getElementById('scoreFields').innerHTML=`<div class="fld"><label>Reps totali giornata</label><input type="number" inputmode="numeric" id="totInput" value="${sum||''}" placeholder="somma reps"></div><div class="fld"><label>Calorie (kcal) — da Apple Watch</label><input type="number" inputmode="numeric" id="kcalInput" placeholder="es. 320"></div><div class="fld"><label>Note</label><input type="text" id="noteInput" placeholder="sensazioni, durata totale"></div>`;
+  renderHist(`${week}_${day}_TOTAL`);document.getElementById('sheet').classList.add('show');
 }
 function openRunSheet(){scoreCtx={run:true};
   document.getElementById('scoreTag').textContent='Corsa';document.getElementById('sheetTitle').textContent='🏃 Registra corsa';document.getElementById('sheetSub').textContent='Inserisci almeno km e durata.';
-  document.getElementById('scoreFields').innerHTML=`<div class="fld half"><label>Distanza (km)</label><input type="number" inputmode="decimal" id="runKm" oninput="liveP()" placeholder="8.0"></div><div class="fld half"><label>Durata (min)</label><input type="number" inputmode="decimal" id="runMin" oninput="liveP()" placeholder="42"></div><div class="fld"><label>FC media (bpm) — opz.</label><input type="number" id="runHr" placeholder="da Watch"></div><div class="fld"><label>Note</label><input type="text" id="runNote" placeholder="percorso, ginocchio"></div><div class="ssub" id="paceLive" style="color:var(--run);font-family:JetBrains Mono">Passo: —</div>`;
+  document.getElementById('scoreFields').innerHTML=`<div class="fld half"><label>Distanza (km)</label><input type="number" inputmode="decimal" id="runKm" oninput="liveP()" placeholder="8.0"></div><div class="fld half"><label>Durata (min)</label><input type="number" inputmode="decimal" id="runMin" oninput="liveP()" placeholder="42"></div><div class="fld"><label>Calorie (kcal) — opz.</label><input type="number" id="runKcal" placeholder="da Watch"></div><div class="fld"><label>FC media (bpm) — opz.</label><input type="number" id="runHr" placeholder="da Watch"></div><div class="fld"><label>Note</label><input type="text" id="runNote" placeholder="percorso, ginocchio"></div><div class="ssub" id="paceLive" style="color:var(--run);font-family:JetBrains Mono">Passo: —</div>`;
   document.getElementById('hist').innerHTML='';document.getElementById('sheet').classList.add('show');
 }
 function liveP(){const km=parseFloat(document.getElementById('runKm').value),min=parseFloat(document.getElementById('runMin').value);document.getElementById('paceLive').textContent='Passo: '+((km>0&&min>0)?paceStr(km,min)+' /km':'—');}
 function closeSheet(){document.getElementById('sheet').classList.remove('show');}
-function renderHist(week,day){const h=scores[`${week}_${day}`]||[];const el=document.getElementById('hist');if(!h.length){el.innerHTML='<div class="hh">Storico</div><div style="color:var(--mut);font-size:13px">Nessun punteggio ancora.</div>';return;}el.innerHTML='<div class="hh">Storico</div>'+h.slice().reverse().map(r=>`<div class="hrow"><span class="hd">${r.date}${r.note?' · '+esc(r.note):''}</span><span class="hv">${esc(r.val)}</span></div>`).join('');}
+function renderHist(key){const h=scores[key]||[];const el=document.getElementById('hist');if(!h.length){el.innerHTML='<div class="hh">Storico</div><div style="color:var(--mut);font-size:13px">Nessun dato ancora.</div>';return;}el.innerHTML='<div class="hh">Storico</div>'+h.slice().reverse().map(r=>`<div class="hrow"><span class="hd">${r.date}${r.note?' · '+esc(r.note):''}</span><span class="hv">${esc(r.val)}</span></div>`).join('');}
 async function saveScore(){
-  if(scoreCtx.run){const km=parseFloat(document.getElementById('runKm').value),min=parseFloat(document.getElementById('runMin').value);if(!(km>0)||!(min>0)){toast('Inserisci km e durata');return;}await saveRunData(km,min,+(min/km).toFixed(3),parseInt(document.getElementById('runHr').value)||null,document.getElementById('runNote').value.trim());closeSheet();renderRun();toast('Corsa salvata ✓');return;}
+  if(scoreCtx.run){const km=parseFloat(document.getElementById('runKm').value),min=parseFloat(document.getElementById('runMin').value);if(!(km>0)||!(min>0)){toast('Inserisci km e durata');return;}await saveRunData(km,min,+(min/km).toFixed(3),parseInt(document.getElementById('runHr').value)||null,document.getElementById('runNote').value.trim());closeSheet();renderList();renderRun();toast('Corsa salvata ✓');return;}
+  if(scoreCtx.total){
+    const tot=document.getElementById('totInput').value.trim();const kcal=document.getElementById('kcalInput').value.trim();
+    if(!tot&&!kcal){toast('Inserisci reps o kcal');return;}
+    const val=(tot?tot+' reps':'')+(kcal?(tot?' · ':'')+kcal+' kcal':'');
+    await saveScoreData(scoreCtx.week,scoreCtx.day+'_TOTAL','Totale','total',val,parseFloat(tot)||0,document.getElementById('noteInput').value.trim(),kcal?parseInt(kcal):null);
+    toast('Totale salvato ✓');renderHist(`${scoreCtx.week}_${scoreCtx.day}_TOTAL`);renderList();return;
+  }
   const val=document.getElementById('scoreInput').value.trim();if(!val){toast('Inserisci un risultato');return;}
-  await saveScoreData(scoreCtx.week,scoreCtx.day,scoreCtx.day,scoreCtx.fmt,val,numFrom(val,scoreCtx.fmt),document.getElementById('noteInput').value.trim());
-  toast('Salvato ✓');renderHist(scoreCtx.week,scoreCtx.day);renderList();document.getElementById('scoreInput').value='';document.getElementById('noteInput').value='';
+  const reps=parseInt(document.getElementById('repsInput').value)||null;
+  const key=scoreCtx.day+'_'+scoreCtx.bi;
+  await saveScoreData(scoreCtx.week,key,'Blocco',scoreCtx.fmt,val,numFrom(val,scoreCtx.fmt),document.getElementById('noteInput').value.trim(),null,reps);
+  toast('Salvato ✓');renderHist(`${scoreCtx.week}_${key}`);renderList();
 }
 function paceStr(km,min){const p=min/km,pm=Math.floor(p),ps=Math.round((p-pm)*60);return `${pm}:${String(ps).padStart(2,'0')}`;}
 
 /* ===== CORSA VIEW ===== */
 function renderRun(){
+  const rs=document.getElementById('runstats');if(!rs)return;
   const tot=runs.reduce((s,r)=>s+r.km,0),totMin=runs.reduce((s,r)=>s+r.min,0);
-  document.getElementById('runstats').innerHTML=`<div class="rstat"><div class="rv">${tot.toFixed(1)}</div><div class="rl">km blocco</div></div><div class="rstat"><div class="rv">${runs.length}</div><div class="rl">uscite</div></div><div class="rstat"><div class="rv">${tot>0?paceStr(tot,totMin):'—'}</div><div class="rl">passo medio</div></div>`;
+  rs.innerHTML=`<div class="rstat"><div class="rv">${tot.toFixed(1)}</div><div class="rl">km blocco</div></div><div class="rstat"><div class="rv">${runs.length}</div><div class="rl">uscite</div></div><div class="rstat"><div class="rv">${tot>0?paceStr(tot,totMin):'—'}</div><div class="rl">passo medio</div></div>`;
   const log=document.getElementById('runlog');
   if(!runs.length){log.innerHTML='<div class="empty">Nessuna corsa in questo blocco.</div>';document.getElementById('runchart').innerHTML='';return;}
   log.innerHTML=runs.slice().reverse().map(r=>`<div class="card"><div class="chead" style="cursor:default"><div class="daytag sp" style="font-family:JetBrains Mono;font-size:15px">${r.km.toFixed(1)}<span style="font-size:9px;color:var(--mut)">km</span></div><div class="ctitle"><div class="cmeta" style="font-family:JetBrains Mono;color:var(--run)">${paceStr(r.km,r.min)}/km · ${r.min}′${r.hr?' · '+r.hr+'bpm':''}</div><div class="cmeta">${r.date}${r.note?' · '+esc(r.note):''}</div></div><button class="x" style="width:34px;height:34px;font-size:17px" onclick="delRunData(${r.id})">×</button></div></div>`).join('');
@@ -811,7 +831,7 @@ async function renderAllMonths(host){
 }
 
 /* ===== NAV ===== */
-function switchView(v){['train','run','prog'].forEach(x=>document.getElementById(x+'View').classList.toggle('show',x===v));document.getElementById('navTrain').classList.toggle('active',v==='train');document.getElementById('navRun').classList.toggle('active',v==='run');document.getElementById('navProg').classList.toggle('active',v==='prog');if(v==='prog')renderCharts();if(v==='run')renderRun();}
+function switchView(v){['train','prog'].forEach(x=>document.getElementById(x+'View').classList.toggle('show',x===v));document.getElementById('navTrain').classList.toggle('active',v==='train');document.getElementById('navProg').classList.toggle('active',v==='prog');if(v==='prog')renderCharts();}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);}
 
 /* ===== BOOT ===== */
