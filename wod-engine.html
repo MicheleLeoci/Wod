@@ -528,7 +528,13 @@ let sb=null, user=null, cloud=false, authMode='login';
 if(SB_URL && SB_KEY){ try{ sb=supabase.createClient(SB_URL,SB_KEY); cloud=true; }catch(e){ cloud=false; } }
 
 /* ===== STATO ===== */
-let curWeek=1, scope='block';
+let curWeek=calcCurWeek(), scope='block';
+function calcCurWeek(){
+  const now=new Date();
+  const day=now.getDate(); // 1-31
+  const w=Math.min(Math.ceil(day/7),4); // settimana 1-4 basata sul giorno del mese
+  return w;
+}
 let scores={}, loads={}, runs=[];
 let blocks=[], curBlock=defaultBlock();
 function defaultBlock(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
@@ -675,14 +681,16 @@ function nextMonth(b){let[y,m]=b.split('-').map(Number);m++;if(m>12){m=1;y++;}re
 /* ===== RENDER PRINCIPALE ===== */
 const plan=PLAN();
 function renderAll(){renderBlockSel();renderWeeks();renderList();setSyncBadge();}
+function isoWeek(date){const d=new Date(date);d.setHours(0,0,0,0);d.setDate(d.getDate()+3-(d.getDay()+6)%7);const w1=new Date(d.getFullYear(),0,4);return 1+Math.round(((d-w1)/86400000-3+(w1.getDay()+6)%7)/7);}
+function blockWeekNum(blockStr,weekIdx){const[y,m]=blockStr.split('-').map(Number);const firstDay=new Date(y,m-1,8+(weekIdx-1)*7);return isoWeek(firstDay);}
 function renderWeeks(){
   let html='';
-  for(let w=1;w<=4;w++){const p=plan[w];html+=`<div class="wtab ${w===curWeek?'active':''} ${p.benchmark?'bench':''}" onclick="selWeek(${w})"><div class="wn">S${w}</div><div class="wl">${p.label}</div></div>`;}
+  for(let w=1;w<=4;w++){const p=plan[w];const wnum=blockWeekNum(curBlock,w);html+=`<div class="wtab ${w===curWeek?'active':''} ${p.benchmark?'bench':''}" onclick="selWeek(${w})"><div class="wn">W${wnum}</div><div class="wl">${p.label}</div></div>`;}
   document.getElementById('weeks').innerHTML=html;
   const hints={1:'Settimana EMOM: un esercizio per minuto, il tempo che avanza è recupero. Densità e tecnica.',2:'Settimana AMRAP: più giri possibili nel tempo dato. Ritmo costante.',3:'Settimana For Time: completa il volume nel minor tempo. Spezza le reps con criterio.',4:'Settimana Benchmark: 5 giri a tempo. È il test che confronti coi mesi successivi.'};
   document.getElementById('weekHint').innerHTML='<b>SETTIMANA '+curWeek+' · '+plan[curWeek].label+'.</b> '+hints[curWeek];
 }
-function selWeek(w){curWeek=w;renderList();}
+function selWeek(w){curWeek=w;renderWeeks();renderList();}
 
 function loadLabel(week,day,bi,mi,carico){
   if(!carico)return `<span class="ld">corpo libero</span>`;
