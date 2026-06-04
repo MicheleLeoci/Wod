@@ -540,9 +540,47 @@ function lsSet(k,v){try{localStorage.setItem(LS(k),JSON.stringify(v));}catch(e){
 /* ===== AUTH ===== */
 async function initAuth(){
   if(!cloud){document.getElementById('cfgbox').style.display='block';document.getElementById('authwrap').classList.add('show');return;}
+  /* Se l'URL contiene type=recovery (utente torna dal link reset password),
+     blocchiamo il flusso normale e aspettiamo l'evento PASSWORD_RECOVERY */
+  if(window.location.hash.includes('type=recovery')){
+    document.getElementById('authwrap').classList.add('show');
+    amsg('Caricamento recupero password…');
+    sb.auth.onAuthStateChange(async (event,session)=>{
+      if(event==='PASSWORD_RECOVERY'){
+        amsg('');
+        showResetPasswordUI(session);
+      }
+    });
+    return;
+  }
   handleRecovery();
   const {data}=await sb.auth.getSession();
   if(data.session){user=data.session.user;startApp();}else document.getElementById('authwrap').classList.add('show');
+}
+function showResetPasswordUI(session){
+  /* Sostituisce il form di login con il form nuova password */
+  const wrap=document.getElementById('authwrap');
+  wrap.innerHTML=`
+    <div class="kick">WOD Engine</div>
+    <h1>Nuova<br>Password</h1>
+    <div class="asub">Scegli una nuova password per il tuo account.</div>
+    <input type="password" id="np1" placeholder="nuova password (min 6)" autocomplete="new-password">
+    <input type="password" id="np2" placeholder="ripeti la nuova password" autocomplete="new-password">
+    <button class="abtn" onclick="doResetPassword()">Imposta password</button>
+    <div class="amsg" id="authMsg"></div>
+  `;
+  wrap._session=session;
+}
+async function doResetPassword(){
+  const p1=document.getElementById('np1').value,p2=document.getElementById('np2').value;
+  if(p1.length<6){amsg('La password deve essere di almeno 6 caratteri.','err');return;}
+  if(p1!==p2){amsg('Le due password non coincidono.','err');return;}
+  amsg('Aggiornamento…');
+  const {error}=await sb.auth.updateUser({password:p1});
+  if(error){amsg(error.message,'err');return;}
+  amsg('Password aggiornata!','ok');
+  const {data}=await sb.auth.getSession();
+  if(data.session){user=data.session.user;setTimeout(()=>{document.getElementById('authwrap').classList.remove('show');startApp();},900);}
 }
 function toggleAuthMode(){authMode=authMode==='login'?'signup':'login';
   document.getElementById('authBtn').textContent=authMode==='login'?'Accedi':'Registrati';
