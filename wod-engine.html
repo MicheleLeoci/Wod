@@ -174,6 +174,7 @@ nav{position:fixed;bottom:0;left:0;right:0;background:rgba(13,13,15,.94);backdro
   <input type="password" id="authPass" placeholder="password (min 6)" autocomplete="current-password">
   <button class="abtn" id="authBtn" onclick="doAuth()">Accedi</button>
   <div class="alink" id="authToggle" onclick="toggleAuthMode()">Non hai un account? Registrati</div>
+  <div class="alink" id="forgotLink" onclick="forgotPassword()" style="color:var(--mut);font-size:12px">Password dimenticata?</div>
   <div class="amsg" id="authMsg"></div>
   <div class="localbadge" onclick="useLocal()">Usa senza account (solo questo dispositivo)</div>
 </div>
@@ -539,6 +540,7 @@ function lsSet(k,v){try{localStorage.setItem(LS(k),JSON.stringify(v));}catch(e){
 /* ===== AUTH ===== */
 async function initAuth(){
   if(!cloud){document.getElementById('cfgbox').style.display='block';document.getElementById('authwrap').classList.add('show');return;}
+  handleRecovery();
   const {data}=await sb.auth.getSession();
   if(data.session){user=data.session.user;startApp();}else document.getElementById('authwrap').classList.add('show');
 }
@@ -557,6 +559,31 @@ async function doAuth(){
   }catch(e){amsg(e.message||'Errore','err');}
 }
 function useLocal(){cloud=false;user=null;document.getElementById('authwrap').classList.remove('show');startApp();}
+async function forgotPassword(){
+  if(!cloud){amsg('Configura prima Supabase.','err');return;}
+  const email=document.getElementById('authEmail').value.trim();
+  if(!email){amsg('Scrivi prima la tua email qui sopra, poi tocca "Password dimenticata?".','err');return;}
+  amsg('Invio email di reset…');
+  try{
+    const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
+    if(error)throw error;
+    amsg('Email inviata a '+email+'. Apri il link nella mail per impostare una nuova password.','ok');
+  }catch(e){amsg(e.message||'Errore invio email','err');}
+}
+/* Quando l'utente torna dal link della mail, Supabase apre una sessione di recupero: chiediamo la nuova password */
+async function handleRecovery(){
+  if(!cloud||!sb)return;
+  sb.auth.onAuthStateChange(async (event,session)=>{
+    if(event==='PASSWORD_RECOVERY'){
+      const np=prompt('Imposta una nuova password (min 6 caratteri):');
+      if(np&&np.length>=6){
+        const {error}=await sb.auth.updateUser({password:np});
+        if(error)alert('Errore: '+error.message);
+        else{alert('Password aggiornata! Ora sei dentro.');if(session&&session.user){user=session.user;startApp();}}
+      }
+    }
+  });
+}
 async function syncTap(){if(cloud&&user){if(confirm('Disconnettere?')){await sb.auth.signOut();location.reload();}}else document.getElementById('authwrap').classList.add('show');}
 function setSyncBadge(){const b=document.getElementById('syncBadge'),t=document.getElementById('syncTxt');if(cloud&&user){b.className='synced on';t.textContent='Cloud';}else{b.className='synced off';t.textContent='Locale';}}
 
